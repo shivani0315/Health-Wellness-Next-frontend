@@ -4,6 +4,8 @@ import { FaUserCircle, FaWeightHanging, FaRulerCombined, FaTransgender, FaBirthd
 import { toast } from "react-toastify";
 import axios from "axios";
 import './profileLayout.css';
+import API_BASE_URL from "../config";
+
 
 export default function ProfileLayout() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -87,7 +89,7 @@ export default function ProfileLayout() {
       }
 
       const response = await axios.put(
-        '${API_BASE_URL}/api/users/profile', 
+        `${API_BASE_URL}/api/users/profile`,  
         profileDataToUpdate, 
         {
           headers: {

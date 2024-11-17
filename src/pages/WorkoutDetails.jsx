@@ -1,8 +1,7 @@
-//frontend\src\pages\WorkoutDetails.jsx
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-import { useAuth } from '../context/AuthContext'
-import { Line } from 'react-chartjs-2'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,7 +12,7 @@ import {
   Tooltip,
   Legend,
   TimeScale
-} from 'chart.js'
+} from 'chart.js';
 import 'chartjs-adapter-date-fns';
 
 ChartJS.register(
@@ -25,8 +24,8 @@ ChartJS.register(
   Tooltip,
   Legend,
   TimeScale
-)
-
+);
+import API_BASE_URL from "../config";
 
 const exerciseData = {
   Chest: ['Bench Press', 'Push-ups', 'Chest Flyes'],
@@ -37,9 +36,8 @@ const exerciseData = {
   Core: ['Planks', 'Crunches', 'Russian Twists']
 };
 
-
 const WorkoutDetails = () => {
-  const { user } = useAuth()
+  const { user } = useAuth();
   const [workoutData, setWorkoutData] = useState({
     muscleGroup: '',
     exercise: '',
@@ -48,10 +46,10 @@ const WorkoutDetails = () => {
     weightPerSet: [],
   });
   const [filteredExercises, setFilteredExercises] = useState([]);
-  const [pastWorkouts, setPastWorkouts] = useState([])
-  const [analyticsExercise, setAnalyticsExercise] = useState('')
-  const [allExercises, setAllExercises] = useState([])
-  const [analyticsData, setAnalyticsData] = useState(null)
+  const [pastWorkouts, setPastWorkouts] = useState([]);
+  const [analyticsExercise, setAnalyticsExercise] = useState('');
+  const [allExercises, setAllExercises] = useState([]);
+  const [analyticsData, setAnalyticsData] = useState(null);
   const [selectedDate, setSelectedDate] = useState('');
 
   const handleInputChange = (e) => {
@@ -67,19 +65,19 @@ const WorkoutDetails = () => {
     } else {
       setWorkoutData(prev => ({ ...prev, [name]: value }));
     }
-  }
+  };
 
   const handleRepsChange = (index, value) => {
     const newRepsPerSet = [...workoutData.repsPerSet];
     newRepsPerSet[index] = value;
     setWorkoutData(prev => ({ ...prev, repsPerSet: newRepsPerSet }));
-  }
+  };
 
   const handleWeightChange = (index, value) => {
     const newWeightPerSet = [...workoutData.weightPerSet];
     newWeightPerSet[index] = value;
     setWorkoutData(prev => ({ ...prev, weightPerSet: newWeightPerSet }));
-  }
+  };
 
   const handleMuscleGroupChange = (e) => {
     const selectedMuscleGroup = e.target.value;
@@ -99,26 +97,25 @@ const WorkoutDetails = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      const response = await axios.post('${API_BASE_URL}/api/workouts', {
+      const response = await axios.post(`${API_BASE_URL}/api/workouts`, {
         ...workoutData,
         repsPerSet: workoutData.repsPerSet.map(rep => parseInt(rep || 0)),
         weightPerSet: workoutData.weightPerSet.map(weight => parseFloat(weight || 0))
       }, {
         headers: { Authorization: `Bearer ${localStorage.getItem('jwttoken')}` }
-      })
-      // console.log('Workout added:', response.data)
-      setWorkoutData({ muscleGroup: '', exercise: '', sets: '', repsPerSet: [], weightPerSet: [] })
-      fetchPastWorkouts()
+      });
+      setWorkoutData({ muscleGroup: '', exercise: '', sets: '', repsPerSet: [], weightPerSet: [] });
+      fetchPastWorkouts();
     } catch (error) {
-      console.error('Error adding workout:', error.response?.data || error.message)
+      console.error('Error adding workout:', error.response?.data || error.message);
     }
-  }
+  };
 
   const fetchPastWorkouts = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/workouts', {
+      const response = await axios.get(`${API_BASE_URL}/api/workouts`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('jwttoken')}` }
       });
       setPastWorkouts(response.data);
@@ -179,17 +176,17 @@ const WorkoutDetails = () => {
   };
 
   const getUniqueExercises = (workouts) => {
-    const exercises = workouts.map(workout => workout.exercise)
-    return [...new Set(exercises)].sort()
-  }
+    const exercises = workouts.map(workout => workout.exercise);
+    return [...new Set(exercises)].sort();
+  };
 
   useEffect(() => {
-    fetchPastWorkouts()
-  }, [])
+    fetchPastWorkouts();
+  }, []);
 
   useEffect(() => {
-    setAllExercises(getUniqueExercises(pastWorkouts))
-  }, [pastWorkouts])
+    setAllExercises(getUniqueExercises(pastWorkouts));
+  }, [pastWorkouts]);
 
   const chartOptions = {
     responsive: true,
@@ -217,7 +214,7 @@ const WorkoutDetails = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Workout Details</h1>
-      
+
       {/* Workout Input Form */}
       <form onSubmit={handleSubmit} className="mb-8">
         <div className="grid grid-cols-2 gap-4">
@@ -226,154 +223,100 @@ const WorkoutDetails = () => {
             value={workoutData.muscleGroup}
             onChange={handleMuscleGroupChange}
             className="border p-2 rounded"
-            required
           >
             <option value="">Select Muscle Group</option>
-            {Object.keys(exerciseData).map((group) => (
-              <option key={group} value={group}>
-                {group}
-              </option>
+            {Object.keys(exerciseData).map((group, index) => (
+              <option key={index} value={group}>{group}</option>
             ))}
           </select>
+
           <select
             name="exercise"
             value={workoutData.exercise}
             onChange={handleExerciseChange}
             className="border p-2 rounded"
-            required
-            disabled={!workoutData.muscleGroup}
           >
             <option value="">Select Exercise</option>
-            {filteredExercises.map((exercise) => (
-              <option key={exercise} value={exercise}>
-                {exercise}
-              </option>
+            {filteredExercises.map((exercise, index) => (
+              <option key={index} value={exercise}>{exercise}</option>
             ))}
           </select>
+
           <input
             type="number"
             name="sets"
             value={workoutData.sets}
             onChange={handleInputChange}
-            placeholder="Number of Sets"
+            placeholder="Sets"
             className="border p-2 rounded"
-            required
-            min="1"
           />
-        </div>
-        {workoutData.sets && parseInt(workoutData.sets) > 0 && (
-          <div className="mt-4 grid grid-cols-4 gap-4">
-            {Array.from({ length: parseInt(workoutData.sets) }, (_, index) => (
-              <React.Fragment key={index}>
-                <input
-                  type="number"
-                  value={workoutData.repsPerSet[index] || ''}
-                  onChange={(e) => handleRepsChange(index, e.target.value)}
-                  placeholder={`Reps for Set ${index + 1}`}
-                  className="border p-2 rounded"
-                  required
-                  min="1"
-                />
-                <input
-                  type="number"
-                  value={workoutData.weightPerSet[index] || ''}
-                  onChange={(e) => handleWeightChange(index, e.target.value)}
-                  placeholder={`Weight for Set ${index + 1}`}
-                  className="border p-2 rounded"
-                  required
-                  min="0"
-                  step="0.1"
-                />
-              </React.Fragment>
-            ))}
-          </div>
-        )}
-        <button type="submit" className="mt-4 bg-blue-500 text-white p-2 rounded">
-          Add Workout
-        </button>
-      </form>
 
-      {/* Past Workouts */}
-      <div className="mb-8">
-        <h2 className="text-xl font-bold mb-2">Past Workouts</h2>
-        <div className="mb-4">
-          <input
-            type="date"
-            value={selectedDate}
-            onChange={handleDateChange}
-            className="border p-2 rounded"
-          />
+          {workoutData.sets && (
+            <>
+              <input
+                type="number"
+                placeholder="Reps per Set"
+                className="border p-2 rounded"
+                onChange={(e) => handleRepsChange(0, e.target.value)}
+              />
+              <input
+                type="number"
+                placeholder="Weight per Set"
+                className="border p-2 rounded"
+                onChange={(e) => handleWeightChange(0, e.target.value)}
+              />
+            </>
+          )}
         </div>
-        {selectedDate && (
-          <div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {pastWorkouts
-              .filter(workout => new Date(workout.date).toDateString() === new Date(selectedDate).toDateString())
-              .map((workout, index) => (
-                <div 
-                  key={index} 
-                  className="bg-white rounded-lg shadow-md overflow-hidden"
-                >
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold mb-2">{workout.exercise}</h3>
-                    <p><strong>Muscle Group:</strong> {workout.muscleGroup}</p>
-                    <p><strong>Sets:</strong> {workout.sets}</p>
-                    <p><strong>Reps per Set:</strong></p>
-                    <ul className="list-disc pl-5">
-                      {workout.repsPerSet.map((reps, idx) => (
-                        <li key={idx}>Set {idx + 1}: {reps} reps</li>
-                      ))}
-                    </ul>
-                    <p><strong>Weight per Set:</strong></p>
-                    <ul className="list-disc pl-5">
-                      {workout.weightPerSet.map((weight, idx) => (
-                        <li key={idx}>Set {idx + 1}: {weight} kg</li>
-                      ))}
-                    </ul>
-                    <p><strong>Date:</strong> {new Date(workout.date).toLocaleDateString()}</p>
-                  </div>
-                </div>
-              ))}
-          </div>
-        )}
-        {selectedDate && pastWorkouts.filter(workout => new Date(workout.date).toDateString() === new Date(selectedDate).toDateString()).length === 0 && (
-          <p>No workouts found for the selected date.</p>
-        )}
-      </div>
+        <button type="submit" className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Submit</button>
+      </form>
 
       {/* Analytics Section */}
       <div>
-        <h2 className="text-xl font-bold mb-2">Workout Analytics</h2>
-        <div className="flex gap-4 mb-4">
-          <select
-            value={analyticsExercise}
-            onChange={(e) => setAnalyticsExercise(e.target.value)}
-            className="border p-2 rounded"
-          >
-            <option value="">Select an exercise</option>
-            {allExercises.map((exercise) => (
-              <option key={exercise} value={exercise}>
-                {exercise}
-              </option>
-            ))}
-          </select>
-          <button 
-            onClick={fetchAnalytics} 
-            className="bg-green-500 text-white p-2 rounded"
-            disabled={!analyticsExercise}
-          >
-            Show Analytics
-          </button>
-        </div>
-        {analyticsData && (
-          <div className="mt-4 w-full xl:w-3/4  md:min-h-96 h-56">
+        <h2 className="text-xl font-semibold mb-4">Analytics</h2>
+        <select
+          value={analyticsExercise}
+          onChange={(e) => setAnalyticsExercise(e.target.value)}
+          className="border p-2 rounded mb-4"
+        >
+          <option value="">Select Exercise for Analytics</option>
+          {allExercises.map((exercise, index) => (
+            <option key={index} value={exercise}>{exercise}</option>
+          ))}
+        </select>
+        <button
+          onClick={fetchAnalytics}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Fetch Analytics
+        </button>
+        <div className="mt-6">
+          {analyticsData && (
             <Line data={prepareChartData()} options={chartOptions} />
-          </div>
+          )}
+        </div>
+      </div>
+
+      {/* Past Workouts Section */}
+      <div>
+        <h2 className="text-xl font-semibold mb-4">Past Workouts</h2>
+        {pastWorkouts.length > 0 ? (
+          <ul className="space-y-4">
+            {pastWorkouts.map((workout, index) => (
+              <li key={index} className="border p-4 rounded shadow">
+                <h3 className="font-bold">{workout.exercise}</h3>
+                <p>Sets: {workout.sets}</p>
+                <p>Reps per Set: {workout.repsPerSet.join(', ')}</p>
+                <p>Weight per Set: {workout.weightPerSet.join(', ')}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No past workouts available</p>
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default WorkoutDetails;

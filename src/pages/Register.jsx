@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import API_BASE_URL from "../config";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -25,7 +26,7 @@ const Register = () => {
     }
 
     try {
-      const response = await axios.post("${API_BASE_URL}/api/users/register", {
+      const response = await axios.post(`${API_BASE_URL}/api/users/register`, {
         name,
         email,
         password,

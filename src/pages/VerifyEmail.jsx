@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import API_BASE_URL from "../config";
 
 const VerifyEmail = () => {
   const { token } = useParams();
@@ -10,7 +11,7 @@ const VerifyEmail = () => {
   useEffect(() => {
     const verifyEmail = async () => {
       try {
-        const response = await axios.get(`/api/users/verify-email/${token}`);
+        const response = await axios.get(`${API_BASE_URL}/api/users/verify-email/${token}`);
         setMessage(response.data.message);
       } catch (error) {
         setMessage(error.response.data.message || "An error occurred");

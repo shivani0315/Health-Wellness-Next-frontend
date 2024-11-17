@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
+import API_BASE_URL from "../config";
 
 const UpdateProfile = () => {
   const { user, login } = useAuth();
@@ -69,7 +70,7 @@ const UpdateProfile = () => {
       
 
       const response = await axios.put(
-        "/api/users/profile",
+        `${API_BASE_URL}/api/users/profile`,
         formDataToSend,
         {
           headers: {

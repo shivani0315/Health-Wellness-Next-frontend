@@ -130,6 +130,7 @@ const WorkoutDetails = () => {
       const response = await axios.get(`/api/workouts/analytics?exercise=${analyticsExercise}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('jwttoken')}` }
       });
+      console.log(response.data); 
       setAnalyticsData(response.data);
     } catch (error) {
       console.error('Error fetching analytics:', error);
@@ -150,6 +151,8 @@ const WorkoutDetails = () => {
       return totalWeight / item.sets; // Average weight per set
     });
 
+    console.log("Chart Data:", { dates, setData, repData, weightData });
+    
     return {
       labels: dates,
       datasets: [
@@ -203,6 +206,16 @@ const WorkoutDetails = () => {
     scales: {
       y: {
         beginAtZero: true,
+      },
+      x: {
+        type: 'time', // Ensure the X-axis is using the time scale
+        time: {
+          unit: 'day', // You can set this to the appropriate unit (e.g., day, month)
+        },
+        title: {
+          display: true,
+          text: 'Date',
+        },
       },
     },
   };
@@ -291,8 +304,10 @@ const WorkoutDetails = () => {
           Fetch Analytics
         </button>
         <div className="mt-6">
-          {analyticsData && (
+          {analyticsData && analyticsData.length > 0 ? (
             <Line data={prepareChartData()} options={chartOptions} />
+          ) : (
+            <p>No data available for the selected exercise.</p>   
           )}
         </div>
       </div>

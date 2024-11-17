@@ -1,4 +1,5 @@
 //frontend\src\pages\SignIn.jsx
+// frontend/src/pages/SignIn.jsx
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
+import API_BASE_URL from "../config"; // Import the base URL
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -20,7 +22,7 @@ const SignIn = () => {
     setLoading(true); // Start loading
     try {
       // Sending login request to the server with the email and password
-      const response = await axios.post("http://localhost:5000/api/users/login", {
+      const response = await axios.post(`${API_BASE_URL}/api/users/login`, {
         email,
         password,
       });

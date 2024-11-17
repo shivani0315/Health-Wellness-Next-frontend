@@ -87,7 +87,7 @@ export default function ProfileLayout() {
       }
 
       const response = await axios.put(
-        'http://localhost:5000/api/users/profile', 
+        '${API_BASE_URL}/api/users/profile', 
         profileDataToUpdate, 
         {
           headers: {

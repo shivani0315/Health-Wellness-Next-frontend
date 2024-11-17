@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
         throw new Error("No token found");
       }
   
-      const response = await axios.get(`http://localhost:5000/api/users/${userId}`, {
+      const response = await axios.get(`${API_BASE_URL}/api/users/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`, // Pass the token in the header
         },

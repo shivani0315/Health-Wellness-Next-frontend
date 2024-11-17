@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode"; // Default import for decoding JWT
 import axios from "axios"; // For making API calls
+import API_BASE_URL from "../config";
 
 const AuthContext = createContext();
 

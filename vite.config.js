@@ -13,6 +13,10 @@ export default defineConfig(({ mode }) => {
         "/uploads": env.REACT_APP_API_URL,
       },
     },
+    build: {
+     
+      chunkSizeWarningLimit: 1000 // Adjust size in kB
+    },
     optimizeDeps: {
       include: ["chartjs-adapter-date-fns"],
     },

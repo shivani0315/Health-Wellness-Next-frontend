@@ -1,6 +1,6 @@
 //frontend\src\pages\ContactUs.jsx
 import React, { useState } from 'react';
-import './ContactUs.css';
+import './contactUs.css';
 
 export default function ContactUs() {
   const [formData, setFormData] = useState({
